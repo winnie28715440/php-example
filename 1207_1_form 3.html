@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<form name="form1" onsubmit="checkForm(); return false;">
+    <!-- onsubmit的return false是在送出前先不要送出 -->
+    <input type="text" id="account" name="account" placeholder="帳號"><br>
+    <input type="password" id="password" name="password" placeholder="密碼">
+    <br>
+    <input type="submit">
+</form>
+
+
+<div id="info"></div>
+
+<script>
+    function checkForm(){
+        const fd = new FormData(document.form1);
+        //用一個新的FormData打包表單的無外觀內容
+        fetch('1207_1_form 2 .php', {
+            method: 'POST',
+            body: fd
+        })
+        .then(r=>r.json())
+        .then(obj=>{
+            console.log(obj);
+            document.querySelector('#info').innerHTML='account:'+obj.account+'<br>'+'password:'+obj.password;
+        })
+        //json搭配object,text搭配string
+        console.log('aaa');
+    }
+
+    /*
+    function checkForm(){
+        const fd = new FormData(document.form1);
+
+        fetch('a20201207-03-form.php', {
+            method: 'POST',
+            body: fd
+        })
+            .then(function(response){
+                return response.text();
+            })
+            .then(function(string){
+                console.log(string);
+            })
+
+        console.log('aaa');
+    }
+    */
+
+</script>
+</body>
+</html>
