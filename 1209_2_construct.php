@@ -11,6 +11,7 @@ class MyCLASS
     public function __construct($name = 'noname')
     {
         $this->name = $name;
+        // echo $this->name;
     }
 }
 
