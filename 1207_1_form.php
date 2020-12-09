@@ -43,6 +43,7 @@ html的form要加method="post" -->
                 password.setAttribute('type', 'text');
             } else {
                 password.setAttribute('type', 'password');
+
             }
 
         }
