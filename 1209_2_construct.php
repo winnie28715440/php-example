@@ -23,6 +23,19 @@ $b = new MyClass('david');
 echo "$b->name <br>";
 
 
+class MyComputer
+{
+    private $name;
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+        echo $this->name;
+    }
+}
+
+$apple = new MyComputer('mac');
+
 
 ?>
 </pre>
