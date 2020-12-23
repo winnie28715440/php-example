@@ -24,12 +24,21 @@ if (!isset($pageName)) $pageName = '';
         <li class="nav-item <?= $pageName == 'ab-insert' ? 'active' : '' ?>">
           <a class="nav-link" href="<?= WEB_ROOT ?>ab-insert.php">新增通訊錄列表 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
+      </ul>
+
+      <ul class="navbar-nav">
+        <?php if (isset($_SESSION['admin'])) : ?>
+          <li class="nav-item">
+            <a class="nav-link" href="<?= WEB_ROOT ?>ab-admin-edit.php"><?= $_SESSION['admin']['account'] ?></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<?= WEB_ROOT ?>logout.php">登出</a>
+          </li>
+        <?php else : ?>
+          <li class="nav-item <?= $pageName == 'login' ? 'active' : '' ?>">
+            <a class="nav-link" href="<?= WEB_ROOT ?>login.php">登入</a>
+          </li>
+        <?php endif ?>
       </ul>
 
     </div>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>file</title>
+</head>
+<body>
+    
+    <input type="file" id="file_field" multiple accept="image/*">
+    <!-- accept是接MIME type：大分類/小分類
+        multiple是接收複數檔案  
+        注意＊jpg欓的MIME type是image/jpeg -->
+    <button onclick="openfile()">check</button>
+
+<script>
+    function openfile(){
+        //必須html的type要是file才會有一個屬性files
+    console.log(file_field.files.length);//檔案的數量
+    console.log(file_field.files[0]);//第一筆檔案
+    console.log(file_field.files);//全部的file list(關聯式陣列)
+    }
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,22 +1,34 @@
 <?php
 
+require __DIR__ . '/db_connect.php';
+$pageName = 'login';
 $title = "登入";
 
-if(! isset($_SESSION)){
-    session_start();
+//帳號寫死固定寫法
+// if (isset($_POST['account']) and isset($_POST['password'])) {
+//     if ($_POST['account'] === 'winnie' and $_POST['password'] === '111') {
+//         //可以登入
+//         $_SESSION['admin']='winnie';
+//     } else {    
+//         $errorMsg = "帳號或密碼錯誤";
+//     }
+// }
+
+if(isset($_POST['account']) and isset($_POST['password']) ){
+$sql = "SELECT * FROM admin WHERE account=? AND password=SHA1(?) ";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([
+    $_POST['account'],
+    $_POST['password'],
+]);
+
+$row = $stmt->fetch();
+if(empty($row)){
+    $errorMsg = "帳號或密碼錯誤";
+}else{
+    $_SESSION['admin'] = $row;
+ }
 }
-
-
-if (isset($_POST['account']) and isset($_POST['password'])) {
-    if ($_POST['account'] === 'winnie' and $_POST['password'] === '111') {
-        //可以登入
-        $_SESSION['admin']='winnie';
-    } else {    
-        $errorMsg = "帳號或密碼錯誤";
-    }
-}
-
-
 ?>
 
 <?php include '/Applications/XAMPP/xamppfiles/htdocs/php-mfee11/parts/html-head.php'; ?>
@@ -36,7 +48,7 @@ if (isset($_POST['account']) and isset($_POST['password'])) {
 
         <?php if(isset($_SESSION['admin'])): ?>
         <div>
-            <h3>Hello <?= $_SESSION['admin'] ?></h3>
+            <h3>Hello <?= $_SESSION['admin']['account'] ?></h3>
             <p><a href="logout.php">登出</a></p>
         </div>
         <?php else : ?>
@@ -55,11 +67,11 @@ if (isset($_POST['account']) and isset($_POST['password'])) {
                             <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" name="password" value="<?= htmlentities($_POST['password'] ?? '') ?>">
                         </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" value="1" id="exampleCheck1" name="exampleCheck1" <?= isset($_POST['exampleCheck1']) ? 'checked' : '' ?>>
-                            <!-- checked是html原有的屬性：checkbox格子裡面checked會預設打勾 -->
+                        <!-- <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" value="1" id="exampleCheck1" name="exampleCheck1" <?php// isset($_POST['exampleCheck1']) ? 'checked' : '' ?>>
+                             checked是html原有的屬性：checkbox格子裡面checked會預設打勾 
                             <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                        </div>
+                        </div> -->
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
 

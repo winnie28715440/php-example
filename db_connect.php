@@ -18,3 +18,7 @@ $pdo_options = [
 // ::是引用裡面的屬性的意思
 
 $pdo = new PDO($dsn, $db_user, $db_pass, $pdo_options);
+
+if (!isset($_SESSION)) {
+    session_start();
+}

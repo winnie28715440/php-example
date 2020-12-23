@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>file</title>
+</head>
+<body>
+    <!-- *參考資料
+    https://developer.mozilla.org/zh-TW/docs/Web/API/FileReader
+    https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL -->
+    
+    
+
+    <img src="" id="preview" alt=""
+    onclick="file_field.click()" 
+    style="width: 300px;height: 300px;background-color:#ccc">
+  <!-- id:file_field.click()程式模擬點擊的動作，但要用戶去點擊才會觸發 -->
+
+    <input type="file" id="file_field" accept="image/*" onchange="fileChange()"
+    style="display: none;">
+    <!-- accept是MIME type  注意＊jpg欓的MIME type是jpeg -->
+    
+
+<script>
+    
+    const file_field = document.querySelector('#file_field');
+    const preview= document.querySelector('#preview');
+    const reader = new FileReader();
+
+    //②讀取後觸發的事件
+    reader.addEventListener('load', function(event){
+         preview.src = reader.result;//把讀取的結果丟到img的src
+         preview.style.height = "auto";
+    });
+
+    //①先把圖片檔案編碼成文字
+    function fileChange(){
+
+    reader.readAsDataURL(file_field.files[0]);
+    //FileReader的方法：readAsDataURL()
+    //base64編碼方式->把二位元資料編碼成字串文字
+
+    console.log(file_field.files.length);//檔案的數量
+    console.log(file_field.files[0]);//第一筆檔案
+    
+    }
+</script>
+
+
+
+
+</body>
+</html>

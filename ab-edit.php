@@ -3,7 +3,22 @@
 require __DIR__. '/is_admin.php';
 require __DIR__ . '/db_connect.php';
 
-$pageName = 'ab-insert';
+if(! isset($_GET['sid'])){
+    header('Location: ab-list.php');
+    exit;
+}
+$sid = intval($_GET['sid']);
+
+$row = $pdo
+    ->query("SELECT * FROM address_book WHERE sid=$sid ")
+    ->fetch();//抓一筆資料出來
+
+//如果資料是空值就跳回ab-list.php
+if(empty($row)){
+    header('Location: ab-list.php');
+    exit;
+}
+
 ?>
 
 <? include __DIR__.'/parts/html-head.php'; ?>
@@ -19,9 +34,9 @@ $pageName = 'ab-insert';
     <div class="row d-flex justify-content-center">
         <div class="col-lg-6">
 
-        <div class="alert alert-danger" role="alert" id="info" style="display: none">
+         <div class="alert alert-danger" role="alert" id="info" style="display: none">
                 錯誤
-            </div>
+         </div>
 
         <?php if(isset($errorMsg)): ?>
             <div class= "alert alert-warning" role="alert">
@@ -32,42 +47,51 @@ $pageName = 'ab-insert';
         
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">新增資料</h5>
+                    <h5 class="card-title">編輯資料</h5>
 
                     <!-- form下novalidate的屬性表單type的驗證都會消失 -->
                     <form method="post" novalidate onsubmit="checkForm(); return false;" name="form1">
+                    <!-- <form method="post" name="form1"> -->
+                      <input type="hidden" name="sid" value="<?= $sid ?>">
+                       <!-- type="hidden"隱藏的input不會在html顯示,但network看得到 -->
                         <div class="form-group">
                             <label for="account">** name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control" id="name" name="name" required
+                            value="<?= htmlentities($row['name']) ?>">
                             <small class="form-text error-msg" style="display: none"></small>
                         </div>
                         <div class="form-group">
                             <label for="account">** email</label>
-                            <input type="email" class="form-control" id="email" name="email" required >
+                            <input type="email" class="form-control" id="email" name="email" required 
+                            value="<?= htmlentities($row['email']) ?>">
                             <small class="form-text error-msg" style="display: none"></small>
                         </div>
                         <div class="form-group">
                             <label for="account">mobile</label>
                             <input type="text" class="form-control" id="mobile" name="mobile"
+                            value="<?= htmlentities($row['mobile']) ?>"
                             pattern="09\d{2}-?\d{3}-?\d{3}">
                             <!-- 手機格式：09xx-xxx-xxx; ?是‘有沒有’的意思不加也沒關係
                                 html標籤裡面的regular expression就不用像js要加\ \用pattern屬性即可 -->
                         </div>
                         <div class="form-group">
                             <label for="account">birthday</label>
-                            <input type="date" class="form-control" id="birthday" name="birthday" >
+                            <input type="date" class="form-control" id="birthday" name="birthday"
+                            value="<?= htmlentities($row['birthday']) ?>" >
                         </div>
                         <!-- 當type=number的時候只能填數值 -->
                         <div class="form-group">
                             <label for="account">address</label>
-                            <textarea  class="form-control"name="address" id="address" cols="50" rows="3" placeholder=""></textarea>
+                            <textarea  class="form-control"name="address" id="address"
+                             cols="50" rows="3"><?= htmlentities($row['address'])?></textarea>
                             <!-- textarea or select的combobox的值(value)
+                            </textarea>要黏著前面不然格式容易跑掉qqq
                             是直接在標籤中間，其他大多是有value屬性可以設定 -->
                         </div>
                 
                         <button type="button" class="btn btn-danger">danger</button>
                         <!-- button不要送出type要改button -->
-                        <button type="submit" class="btn btn-primary">新增</button>
+                        <button type="submit" class="btn btn-primary">修改</button>
                         <input type="submit" class="btn btn-warning" value="~~">
                     </form>
 
@@ -128,7 +152,7 @@ $pageName = 'ab-insert';
         if(isPass){
             const fd = new FormData(document.form1);
             //表單的第一個項目
-            fetch('ab-insert-api.php', {
+            fetch('ab-edit-api.php', {
                 method: 'POST',
                 body: fd
             })
@@ -138,14 +162,14 @@ $pageName = 'ab-insert';
                 console.log(obj);
 
             if(obj.success){
-                    // 新增成功
+                    // 修改成功
                     info.classList.remove('alert-danger');
                     info.classList.add('alert-success');
-                    info.innerHTML = '新增成功';
+                    info.innerHTML = '修改成功';
                 } else {
                     info.classList.remove('alert-success');
                     info.classList.add('alert-danger');
-                    info.innerHTML = obj.error || '新增失敗';
+                    info.innerHTML = obj.error || '修改失敗';
                 }
                 info.style.display = 'block';
             });
